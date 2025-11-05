@@ -1,83 +1,78 @@
-# 📈 Binance SMA Crossover Analyzer CLI
+# 💰 Financial Analyzer CLI Suite (Emas & Kripto)
 
-Skrip Python ini berfungsi sebagai alat analisis teknikal berbasis terminal yang mengambil data *real-time* dari API Binance (spot market) dan menerapkan strategi *Simple Moving Average (SMA) Crossover* untuk menghasilkan sinyal *Buy* atau *Sell*.
-
-Ideal digunakan untuk menganalisis cepat beberapa aset kripto tanpa perlu membuka platform trading.
-
----
-
-## 💡 Fitur Utama
-
-* **Multi-Market Analysis** 📊
-    Menganalisis beberapa market (default: BTCUSDT, ETHUSDT, SOLUSDT, XRPUSDT, DOGEUSDT) secara otomatis dalam satu sesi.
-* **SMA Crossover Strategy** 📉
-    Menggunakan persilangan antara SMA Pendek dan SMA Panjang untuk menghasilkan sinyal trading (1 = BUY, -1 = SELL, 0 = HOLD).
-* **Pilihan Sensitivitas Dinamis** ⚙️
-    Menyediakan menu interaktif untuk memilih konfigurasi SMA yang sudah ditentukan (**Scalping, Swing Trading, Investasi**) atau menginput periode SMA secara manual.
-* **Data *Real-time*** 🔗
-    Mengambil 500 bar data historis terbaru (1 jam per baris) dari API publik Binance.
-* **Output Terminal Jelas** 🎯
-    Menampilkan hasil analisis (Waktu, Harga Tutup, Nilai SMA) dalam format tabel yang mudah dibaca untuk 12 bar data terakhir.
+Kumpulan skrip Python ini menyediakan alat analisis teknikal berbasis terminal untuk mengevaluasi sinyal Jual/Beli untuk dua aset utama: **Emas Murni (IDR)** dan beberapa pasangan **Kripto (Binance)** menggunakan strategi *Simple Moving Average (SMA) Crossover*.
 
 ---
 
 ## 🛠️ Persiapan Awal
 
-### 1. Kebutuhan Software
-Skrip ini membutuhkan **Python 3** dan *library* **`requests`**.
+### 1. Kebutuhan Software & Library
+Skrip ini membutuhkan **Python 3** dan *library* **`requests`** untuk mengambil data *real-time*.
 
 ```bash
-# Perbarui Termux dan instal Python
+# Instal Python di Termux
 pkg install python 
 
-# Instal library requests untuk mengambil data API
+# Instal library requests
 pip install requests
 ```
 
-### 2. Konfigurasi File
-Anda dapat mengedit daftar **`MARKETS_TO_ANALYZE`** dalam file Python untuk mengubah aset kripto yang akan diuji.
-
-```python
-MARKETS_TO_ANALYZE = [
-    "BTCUSDT",
-    "ETHUSDT",
-    # Tambahkan market lain di sini...
-]
-```
+### 2. Simpan Kode
+Pastikan kedua file (`prediksi-emas.py` dan `prediksi.py`) sudah tersimpan di direktori kerja Termux Anda.
 
 ---
 
-## 🚀 Cara Menggunakan
+## 🪙 Modul 1: Binance SMA Crossover Analyzer (`prediksi.py`)
 
-1.  **Jalankan Skrip dari Terminal:**
+Modul ini menganalisis beberapa pasangan *spot* kripto dari Binance menggunakan strategi SMA Crossover (Pendek vs Panjang).
+
+### ⚙️ Cara Kerja
+* **Data Source**: API Publik Binance (`/api/v3/klines`) dengan interval **1 jam**.
+* **Strategi**: Menganalisis persilangan antara SMA Pendek dan SMA Panjang (periode ditentukan pengguna).
+* **Daftar Market**: Secara *default* menguji BTCUSDT, ETHUSDT, SOLUSDT, XRPUSDT, DOGEUSDT (dapat dikonfigurasi dalam kode).
+* **Sinyal**: 1 = Beli (BUY), -1 = Jual (SELL), 0 = Tahan (HOLD).
+
+### 🚀 Cara Menjalankan
+1.  Jalankan skrip:
     ```bash
     python prediksi.py
     ```
-
-2.  **Pilih Sensitivitas Strategi:**
-    Anda akan disajikan menu untuk memilih periode SMA (misalnya 10/30) yang sesuai dengan gaya trading Anda (Sensitif, Jangka Panjang, atau Manual).
-
-3.  **Lihat Hasil Analisis:**
-    Skrip akan mengambil data, menghitung SMA, dan menampilkan tabel hasil untuk setiap market yang dikonfigurasi.
-
-### Interpretasi Sinyal
-
-| Sinyal | Keterangan |
-| :----: | :---------- |
-| **1** | **BUY** (SMA Pendek memotong ke atas SMA Panjang) |
-| **-1** | **SELL** (SMA Pendek memotong ke bawah SMA Panjang) |
-| **0** | **HOLD** (Tidak ada persilangan yang terjadi) |
+2.  Pilih konfigurasi sensitivitas SMA dari menu yang tersedia (Scalping, Swing, atau Manual).
+3.  Hasil akan ditampilkan per market dalam format tabel yang menunjukkan 12 bar data historis terakhir.
 
 ### Contoh Opsi Sensitivitas
 ```
-  [1] Sangat Sensitif (Scalping/Tren Cepat) (5/10 SMA)
-  [2] Sensitif Sedang (Default) (10/30 SMA)
-  [3] Jangka Menengah (Swing Trading) (20/50 SMA)
-  [4] Jangka Panjang (Investasi) (50/100 SMA)
+  [1] Sangat Sensitif (5/10 SMA) 
+  [3] Jangka Menengah (20/50 SMA) 
 ```
 
 ---
 
+## 🥇 Modul 2: Emas SMA Analyzer (`prediksi-emas.py`)
+
+Modul ini menganalisis harga Emas Murni dalam Rupiah (IDR) untuk keputusan investasi jangka menengah/panjang.
+
+### ⚙️ Cara Kerja
+* **Data Source**: API CoinGecko (Harga Gram Gold/GRAMG vs IDR) untuk **365 hari terakhir**.
+* **Strategi**: Membandingkan **Harga Terakhir** dengan **Rata-Rata Bergerak (MA)** dari periode `WINDOW` (default: 60 hari).
+* **Sinyal**: Dihasilkan berdasarkan Harga vs MA (JUAL jika Harga > MA; BELI jika Harga < MA).
+* **Output**: Menggunakan fungsi format Rupiah (`format_rupiah`) untuk tampilan yang rapi.
+
+### 🚀 Cara Menjalankan
+1.  **Konfigurasi**: Anda dapat mengubah periode `WINDOW` (default 60 hari) di awal kode `prediksi-emas.py`.
+2.  Jalankan skrip:
+    ```bash
+    python prediksi-emas.py
+    ```
+3.  Skrip akan mengambil data, menghitung MA, dan menampilkan sinyal dominan (JUAL/BELI) untuk harga emas terakhir, diikuti oleh detail historis 10 hari terakhir.
+
+---
+
+## ⚠️ Disklaimer
+
+Analisis ini murni berdasarkan indikator teknikal Simple Moving Average dan tidak boleh dianggap sebagai saran investasi keuangan yang mengikat. Selalu lakukan riset Anda sendiri sebelum membuat keputusan trading.
+
+---
 ## 🤝 Kontribusi
 
-Saran untuk menambahkan indikator teknikal lain (seperti RSI, MACD) atau *endpoint* API baru sangat diapresiasi! Silakan buka **Issues** atau kirimkan **Pull Request**.
+Saran atau ide untuk modul analisis tambahan, perbaikan API, atau penambahan indikator teknikal sangat diapresiasi! Silakan buka **Issues** atau kirimkan **Pull Request**.
