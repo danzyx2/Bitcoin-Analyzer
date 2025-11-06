@@ -1,78 +1,95 @@
-# 💰 Financial Analyzer CLI Suite (Emas & Kripto)
+# 🚀 Financial Analyzer CLI Suite (3 Modul) - Analisis Mendalam
 
-Kumpulan skrip Python ini menyediakan alat analisis teknikal berbasis terminal untuk mengevaluasi sinyal Jual/Beli untuk dua aset utama: **Emas Murni (IDR)** dan beberapa pasangan **Kripto (Binance)** menggunakan strategi *Simple Moving Average (SMA) Crossover*.
+Kumpulan skrip Python berbasis terminal ini menyediakan tiga modul analisis teknikal berbeda untuk pengambilan keputusan investasi/trading:
+
+1. **Kripto MACD-RSI Analyzer** (Analisis Lanjut)
+2. **Emas SMA Analyzer** (Analisis Investasi Jangka Menengah)
+3. **Kripto SMA Crossover Analyzer** (Analisis Dasar)
+
+Semua modul menggunakan data *real-time* dari API publik (Binance & CoinGecko).
 
 ---
 
-## 🛠️ Persiapan Awal
+## 📚 Pengertian Indikator Utama
 
-### 1. Kebutuhan Software & Library
-Skrip ini membutuhkan **Python 3** dan *library* **`requests`** untuk mengambil data *real-time*.
+### 1. Simple Moving Average (SMA)
+SMA adalah indikator berbasis tren yang menghitung **harga rata-rata aset selama periode waktu tertentu** (misalnya, 20 hari, 50 jam). SMA berfungsi sebagai garis *support* dan *resistance* yang dinamis. Dalam strategi *Crossover*, sinyal muncul ketika:
+* **BUY**: SMA Pendek (Sensitif) memotong di atas SMA Panjang (Lambat).
+* **SELL**: SMA Pendek memotong di bawah SMA Panjang.
 
+### 2. Relative Strength Index (RSI)
+RSI adalah **indikator momentum** yang mengukur kecepatan dan perubahan pergerakan harga. Nilainya berkisar antara 0 hingga 100. Fungsi utamanya:
+* **Area *Overbought*** (Jenuh Beli): RSI di atas 70. Menandakan aset mungkin akan segera turun.
+* **Area *Oversold*** (Jenuh Jual): RSI di bawah 30. Menandakan aset mungkin akan segera naik.
+
+### 3. Moving Average Convergence Divergence (MACD)
+MACD adalah indikator momentum berbasis EMA (Exponential Moving Average) yang menunjukkan hubungan antara dua harga rata-rata aset. MACD terdiri dari tiga bagian:
+* **MACD Line**: Perbedaan antara EMA Cepat dan EMA Lambat.
+* **Signal Line**: EMA dari MACD Line itu sendiri.
+* **MACD Histogram**: Perbedaan antara MACD Line dan Signal Line (menunjukkan momentum).
+Sinyal **BUY/SELL** terjadi saat **MACD Line melintasi Signal Line**.
+
+---
+
+## 🪙 Modul 1: Kripto MACD-RSI Analyzer (`prediksi.py`)
+
+Modul ini menggabungkan sinyal tren (MACD) dan sinyal momentum (RSI) untuk filter yang lebih ketat.
+
+### 💡 Fitur-Fitur Utama
+* **Sinyal Terfilter**: Sinyal BUY (MACD Crossover UP) **dibatalkan** jika RSI sudah berada di zona *Overbought* (>70). Sinyal SELL (MACD Crossover DOWN) **dibatalkan** jika RSI sudah berada di zona *Oversold* (<30).
+* **Indikator Manual**: Semua indikator (EMA, MACD, RSI) dihitung secara manual dalam skrip, tidak bergantung pada *library* pihak ketiga seperti `pandas`.
+* **Visualisasi Warna**: Menggunakan warna ANSI untuk menyorot Harga, MACD Histogram (positif/negatif), RSI (overbought/oversold), dan Sinyal BUY/SELL/HOLD.
+
+### 🚀 Cara Menjalankan
 ```bash
-# Instal Python di Termux
-pkg install python 
-
-# Instal library requests
-pip install requests
+python prediksi.py
 ```
-
-### 2. Simpan Kode
-Pastikan kedua file (`prediksi-emas.py` dan `prediksi.py`) sudah tersimpan di direktori kerja Termux Anda.
-
 ---
 
-## 🪙 Modul 1: Binance SMA Crossover Analyzer (`prediksi.py`)
+## 🥇 Modul 2: Emas SMA Analyzer (API-Driven) (`prediksi-emas.py`)
 
-Modul ini menganalisis beberapa pasangan *spot* kripto dari Binance menggunakan strategi SMA Crossover (Pendek vs Panjang).
+Modul ini fokus pada keputusan investasi jangka panjang Emas Murni (IDR).
 
-### ⚙️ Cara Kerja
-* **Data Source**: API Publik Binance (`/api/v3/klines`) dengan interval **1 jam**.
-* **Strategi**: Menganalisis persilangan antara SMA Pendek dan SMA Panjang (periode ditentukan pengguna).
-* **Daftar Market**: Secara *default* menguji BTCUSDT, ETHUSDT, SOLUSDT, XRPUSDT, DOGEUSDT (dapat dikonfigurasi dalam kode).
-* **Sinyal**: 1 = Beli (BUY), -1 = Jual (SELL), 0 = Tahan (HOLD).
+### 💡 Fitur-Fitur Utama
+* **Data *Real-time***: Mengambil harga harian Gram Gold (GRAMG) terhadap IDR selama 365 hari terakhir dari API **CoinGecko**.
+* **Strategi Investasi**: Menggunakan perbandingan Harga saat ini vs MA Jangka Panjang (default 60 Hari) untuk menentukan apakah harga di bawah (BUY) atau di atas (JUAL) nilai wajarnya.
+* **Output Lokal**: Format harga otomatis ke konvensi Rupiah (`Rp 1.000.000`) agar mudah dibaca.
 
 ### 🚀 Cara Menjalankan
-1.  Jalankan skrip:
-    ```bash
-    python prediksi.py
-    ```
-2.  Pilih konfigurasi sensitivitas SMA dari menu yang tersedia (Scalping, Swing, atau Manual).
-3.  Hasil akan ditampilkan per market dalam format tabel yang menunjukkan 12 bar data historis terakhir.
-
-### Contoh Opsi Sensitivitas
-```
-  [1] Sangat Sensitif (5/10 SMA) 
-  [3] Jangka Menengah (20/50 SMA) 
+```bash
+python prediksi-emas.py
 ```
 
 ---
 
-## 🥇 Modul 2: Emas SMA Analyzer (`prediksi-emas.py`)
+## 📉 Modul 3: Kripto SMA Crossover Analyzer (Versi Dasar)
 
-Modul ini menganalisis harga Emas Murni dalam Rupiah (IDR) untuk keputusan investasi jangka menengah/panjang.
+Ini adalah modul kripto yang lebih sederhana, ideal untuk pemula, hanya menggunakan strategi SMA Crossover.
 
-### ⚙️ Cara Kerja
-* **Data Source**: API CoinGecko (Harga Gram Gold/GRAMG vs IDR) untuk **365 hari terakhir**.
-* **Strategi**: Membandingkan **Harga Terakhir** dengan **Rata-Rata Bergerak (MA)** dari periode `WINDOW` (default: 60 hari).
-* **Sinyal**: Dihasilkan berdasarkan Harga vs MA (JUAL jika Harga > MA; BELI jika Harga < MA).
-* **Output**: Menggunakan fungsi format Rupiah (`format_rupiah`) untuk tampilan yang rapi.
+### 💡 Fitur-Fitur Utama
+* **Simplicity**: Hanya membutuhkan input dua periode SMA (Pendek dan Panjang).
+* **Pilihan Sensitivitas**: Menyediakan opsi prasetel (Scalping, Swing, Investasi) untuk periode SMA, memudahkan pengguna memilih gaya trading.
+* **Multi-Market**: Dapat menganalisis daftar market yang dikonfigurasi dalam kode dalam satu sesi.
 
 ### 🚀 Cara Menjalankan
-1.  **Konfigurasi**: Anda dapat mengubah periode `WINDOW` (default 60 hari) di awal kode `prediksi-emas.py`.
-2.  Jalankan skrip:
-    ```bash
-    python prediksi-emas.py
-    ```
-3.  Skrip akan mengambil data, menghitung MA, dan menampilkan sinyal dominan (JUAL/BELI) untuk harga emas terakhir, diikuti oleh detail historis 10 hari terakhir.
+```bash
+python prediksi.py
+```
+> **Catatan**: Pastikan skrip `prediksi.py` Anda menggunakan kode versi SMA Crossover untuk menjalankan modul ini.
 
 ---
 
-## ⚠️ Disklaimer
+## 🚨 Troubleshooting (Error Koneksi API)
 
-Analisis ini murni berdasarkan indikator teknikal Simple Moving Average dan tidak boleh dianggap sebagai saran investasi keuangan yang mengikat. Selalu lakukan riset Anda sendiri sebelum membuat keputusan trading.
+Jika Anda menemui *error* saat skrip mencoba mengambil data dari API Binance atau CoinGecko, terutama *Timeout* atau *SSL Error*, ini mungkin disebabkan oleh pembatasan jaringan (termasuk firewall atau pembatasan geografis).
+
+### Solusi: Gunakan VPN
+Untuk mengatasi masalah ini, **disarankan untuk menjalankan skrip menggunakan layanan VPN**.
+* **Tujuan VPN**: VPN dapat mengalihkan koneksi Anda melalui server di lokasi yang tidak memiliki pembatasan akses ke API publik Binance/CoinGecko.
+* **Contoh Error**: Anda mungkin melihat `requests.exceptions.ConnectionError` atau `SSLError`.
 
 ---
+
 ## 🤝 Kontribusi
 
-Saran atau ide untuk modul analisis tambahan, perbaikan API, atau penambahan indikator teknikal sangat diapresiasi! Silakan buka **Issues** atau kirimkan **Pull Request**.
+Ide, saran, atau laporan *bug* sangat kami hargai. Silakan buka **Issues** atau kirimkan **Pull Request**.
