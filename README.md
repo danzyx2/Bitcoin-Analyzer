@@ -31,7 +31,7 @@ Sinyal **BUY/SELL** terjadi saat **MACD Line melintasi Signal Line**.
 
 ---
 
-## 🪙 Modul 1: Kripto MACD-RSI Analyzer (`prediksi.py`)
+## 🪙 Modul 1: Kripto MACD-RSI Analyzer (`btc_A.py`)
 
 Modul ini menggabungkan sinyal tren (MACD) dan sinyal momentum (RSI) untuk filter yang lebih ketat.
 
@@ -62,7 +62,7 @@ python prediksi-emas.py
 
 ---
 
-## 📉 Modul 3: Kripto SMA Crossover Analyzer (Versi Dasar)
+## 📉 Modul 3: Kripto SMA Crossover Analyzer (prediksi.py)
 
 Ini adalah modul kripto yang lebih sederhana, ideal untuk pemula, hanya menggunakan strategi SMA Crossover.
 
